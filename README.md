@@ -19,7 +19,7 @@ snp recode is written in python 3.5 and tested on:
 For snprecode to run properly, install Python v3.5+ and Biopython module
 
 To use snprecode, download the standalone from:<br/>
-```https://gccode.ssc-spc.gc.ca/amarete/fimputeutils/-/blob/master/FimputeUtils/snprecode```<br/>
+```https://github.com/AMarete/FImpute-Imputation/blob/master/snprecode```<br/>
 change to executable: ```chmod a+x snprecode```<br/>
 for full argument list run ```./snprecode.py -h```
 
