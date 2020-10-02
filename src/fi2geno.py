@@ -33,7 +33,7 @@ if toto == 1:
         '''##fileformat=VCFv4.2
 ##filedate=%s
 ##source="snprecode v1.0.1"
-##FORMAT=<sample_id=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ''' % (datetime.today().strftime('%Y%m%d'))
     ))
 elif toto == 2:
