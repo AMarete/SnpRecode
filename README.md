@@ -73,7 +73,7 @@ run snprecode<br/>
 
 the program will stop if:<br/>
     ```- duplicate snp(s) or sample(s) found within or between files```<br/>
-    ```- differing number of chromosomes between files```
+    ```- files have different chromosome count and/or different chromosome names```
 
 If such errors are found, a file with errors will be generated: ```Error.txt```<br/>
 
