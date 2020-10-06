@@ -40,14 +40,15 @@ def main():
         if set(args1) - gg:
             bomb(f'Missing argument {list(set(args1) - gg)}\n'
                  'Error: run `./snprecode -h` for complete arguments list\n')
-        if sys.argv[1] == "-F" or sys.argv[1] == "--FILEPATH":
-            if not isdir(sys.argv[1]):
-                bomb(f"Check if directory path (-F, --FILEPATH) exists and non-empty files in dir path\n"
-                     f"       Don't forget -O prefix or --OUT prefix\n")
 
+        from check_path import check_path
+        if not check_path():
+            print("File path OK...")
+        del check_path
+        
         from garbage import check_dups
         if not check_dups():
-            print("File check complete...\n")
+            print("File check complete...")
         del check_dups
 
         import geno2fi
