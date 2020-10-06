@@ -1,7 +1,6 @@
 author: andrew.marete@canada.ca, (C), 2020
 
-snprecode is a helper utility to convert between various genotype formats specifically for fimpute software.<br/>
-Fimpute is a large scale genotype imputation software designed for use where hundreds of thousands of individuals are genotyped with different panels. Fimpute accepts and generates genotypes in specific format. Format conversion software does not come standard with the distribution of fimpute executable. snprecode software aims to bridge this gap by:<br/> 
+snprecode is a helper utility to convert between various genotype formats specifically for fimpute software. fimpute is a large scale genotype imputation software designed for use where hundreds of thousands of individuals are genotyped with different panels. Fimpute accepts and generates genotypes in specific format. Format conversion software does not come standard with the distribution of fimpute executable. snprecode software aims to bridge this gap by:<br/> 
 
     simulatneously seemless conversion of upto 10 chips from vcf and/or ped/map to fimpute acceptable format
     Conversion from fimpute to vcf or ped/map format
