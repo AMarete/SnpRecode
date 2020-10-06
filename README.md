@@ -1,9 +1,7 @@
 author: andrew.marete@canada.ca, (C), 2020
 
-snprecode is a helper utility to convert between various genotype formats specifically for fimpute software<br/>
-Fimpute is a powerful software that accepts and generates genotypes in specific format.<br/> 
-Format conversion software does not come standard with the distribution of fimpute executable<br/>
-This software aims to bridge this gap by:<br/> 
+snprecode is a helper utility to convert between various genotype formats specifically for fimpute software.<br/>
+Fimpute is a large scale genotype imputation software designed for use where hundreds of thousands of individuals are genotyped with different panels. Fimpute accepts and generates genotypes in specific format. Format conversion software does not come standard with the distribution of fimpute executable. snprecode software aims to bridge this gap by:<br/> 
 
     simulatneously seemless conversion of upto 10 chips from vcf and/or ped/map to fimpute acceptable format
     Conversion from fimpute to vcf or ped/map format
@@ -78,13 +76,13 @@ the program will stop if:<br/>
 If such errors are found, a file with errors will be generated: ```Error.txt```<br/>
 
 If no errors are found, snprecode generates 3 files: <br/>
-	```{PREFIX}.geno, {PREFIX}.mark for fimpute input and``` <br/>
-	```{PREFIX}.alleles to decode fimpute output```<br/>
+	```{PREFIX}.geno, {PREFIX}.mark ```as inputs for fimpute and <br/>
+	```{PREFIX}.alleles ``` to decode fimpute output<br/>
 
 run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 For phased output, use option ```save haplotypes; diplotype```
 
-recode from Fimpute format to vcf<br/>
+recode fimpute output to vcf<br/>
 	```./snprecode -g genotypes_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {PREFIX}.alleles -o {PREFIX_2}```
 
 A final vcf with study samples will be produced for downstream analysis i.e. ```{PREFIX_2}.vcf.gz```<br/>
