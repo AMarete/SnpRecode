@@ -2,11 +2,12 @@ from statistics import mode
 from funtools import open_by_suffix, file_by_size, to_mat, line_count, counter, find_common, bomb
 from parse_args import my_parser
 import gzip
-
+from os.path import isdir
 # from parse_args import my_parser
 
 
 # get a list of input files
+
 vcf_list = [file_ for file_ in file_by_size(my_parser().filePath, ['vcf']) if file_.endswith(('vcf', 'vcf.gz'))]
 plink_list = to_mat(sorted(file_by_size(my_parser().filePath, ["ped", "map"])), 2)
 # vcf_list = [file_ for file_ in file_by_size("../test_data", ['vcf']) if file_.endswith(('vcf', 'vcf.gz'))]
