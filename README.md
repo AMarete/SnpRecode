@@ -18,10 +18,9 @@ snp recode is written in python 3.5 and tested on:
 
 For snprecode to run properly, install Python v3.5+ and Biopython module
 
-To use snprecode, download the standalone from:<br/>
-```https://github.com/AMarete/fimpute-utils/blob/master/snprecode```<br/>
+To use, one can download the [snprecode](https://github.com/AMarete/fimpute-utils/blob/master/snprecode) standalone :<br/>
 change to executable: ```chmod a+x snprecode```<br/>
-for full argument list run ```./snprecode.py -h```
+for full argument list run ```./snprecode -h```
 
 basic usage:  
     
@@ -82,14 +81,14 @@ If no errors are found, snprecode generates 3 files: <br/>
 	```{PREFIX}.geno, {PREFIX}.mark for fimpute input and``` <br/>
 	```{PREFIX}.alleles to decode fimpute output```<br/>
 
-run fimpute per fimpute guidelines<br/>
-```http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf```<br/>For phased output, use option ```save haplotypes; diplotype```
+run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
+For phased output, use option ```save haplotypes; diplotype```
 
 recode from Fimpute format to vcf<br/>
 	```./snprecode -g genotypes_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {PREFIX}.alleles -o {PREFIX_2}```
 
 A final vcf with study samples will be produced for downstream analysis i.e. ```{PREFIX_2}.vcf.gz```<br/>
-If fimpute was successful in phasing, the alleles will be phased with | separator, otherwise they’ll have a / separator as per vcf conventions 
+If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions 
 
 
 VCF correlation :: coming soon!
