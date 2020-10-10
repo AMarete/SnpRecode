@@ -77,7 +77,7 @@ run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargo
 A final file with study samples will be produced for downstream analysis e.g ```{PREFIX_2}.vcf.gz```<br/>. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions 
 
 
-<b>Genotype correlation</b>: To estimate the imputation accuracy, we have implemented a dosage correlation estimator between a real and masked genotype. One can mask a percentage of the reference population pre-imputation, impute it as if the alleles were missing, and compare the now imputed masked genotype to the original genotype. This can be achieved by running ```./snprecode --file file1.vcf.gz file2.vcf.gz```. The two files have to have samples occuring in the same sequence otherwise SnpRecode will stop running. A successful run produce two files:<br/>
+<b>Genotype correlation</b>: To estimate the imputation accuracy, we have implemented a dosage correlation estimator between a real and masked genotype. One can mask a percentage of the reference population pre-imputation, impute it as if the alleles were missing, and compare the now imputed masked genotype to the original genotype.<br/>This can be achieved by running ```./snprecode --file file1.vcf.gz file2.vcf.gz```. The two files have to have samples occuring in the same sequence otherwise SnpRecode will stop running. A successful run produce two files:<br/>
 	```genotype_R2.txt``` contains the R-square values per SNP<br/>
 	```genotype_R2.pdf``` A graph showing distribution of R-square by minor allele frequency<br/>
 	
