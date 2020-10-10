@@ -32,6 +32,12 @@ basic usage:
     -t 1=vcf; 2=ped|map \ 
     -a alleles.txt \
     -o PREFIX
+    
+    Calculate genotype correlation between two (un)compressed vcf
+    ./snprecode --file file1.vcf.gz file2.vcf.gz
+    
+    Create an fimpute acceptable snp_info file from one or more plink maps (bim and/or map), max=10 files
+    ./snprecode --file [file_1.map, ..., file_n.bim]
 
 
 On occasion plink tends to flip alleles, its therefore best to use a normalized vcf file as follows:
