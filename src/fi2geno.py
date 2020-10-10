@@ -10,12 +10,25 @@ from recode_dict import fimpute_2_vcf
 
 start = timeit.default_timer()
 
-samples = open(my_parser().samples, "r")
-snp_info = open(my_parser().snps, "r")
-geno_info = open(my_parser().geno, "r")
-allele_info = open(my_parser().allele, "r")
+try:
+    samples = open(my_parser().samples, "r")
+except FileNotFoundError:
+    bomb(f"Missing argument or '{my_parser().samples}' may be empty\n")
+try:
+    snp_info = open(my_parser().snps, "r")
+except FileNotFoundError:
+    bomb(f"Missing argument or '{my_parser().snps}' may be empty\n")
+try:
+    geno_info = open(my_parser().geno, "r")
+except FileNotFoundError:
+    bomb(f"Missing argument or '{my_parser().geno}' may be empty\n")
+try:
+    allele_info = open(my_parser().allele, "r")
+except FileNotFoundError:
+    bomb(f"Missing argument or '{my_parser().allele}' may be empty\n")
 
 toto = my_parser().type_
+
 
 if my_parser().out:
     pass
@@ -61,18 +74,24 @@ with snp_info as file:
 alleles = {}
 with allele_info as file:
     for line in file:
-        chrom = line.strip().split("_")[0]
-        pos = line.strip().split("_")[1]
-        ref = line.strip().split("_")[2]
-        alt = line.strip().split("_")[3]
+        chrom, pos, ref, alt = line.strip().split("_")
         alleles[chrom + ":" + pos] = [chrom, pos, line.strip(), ref, alt, ".", "PASS", ".", "GT"]
 
 # For VCF only
 # Add header for first 9 lines and write vcf
+'''
 if set(snps).issubset(set(alleles)):
     vcf_snps = [v for v in alleles.values()]
+'''
+vcfsnps = {}
+for key in snps.keys():
+    try:
+        vcfsnps[key] = alleles[key]
+    except KeyError:
+        bomb("{key} missing in allele file")
+vcf_snps = vcfsnps.values()
 vcf_snps = sorted(vcf_snps, key=lambda x: (int(x[0]), int(x[1])))
-vcf_snps.insert(0, ["#CHROM", "POS", "sample_id", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
+vcf_snps.insert(0, ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
 genotypes = []
 
 # imputed geno file
@@ -101,7 +120,7 @@ with geno_info as gfile:
 
 # continue writing VCF
 if toto == 1:
-    for row in zip(vcf_snps, zip(*genotypes)):
+    for row in zip(vcf_snps, [*zip(*genotypes)]):
         line = [list(flatten(i)) for i in list(row)]
         geno_out.write('\t'.join(flatten(line)) + '\n')
 

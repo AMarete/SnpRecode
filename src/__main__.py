@@ -2,53 +2,47 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from os.path import isdir, isfile
+import itertools
 from check_modules import py_version, pkg_requirements
 from funtools import welcome_message, bomb
 
-'''
-pkg_requirements()
-py_version()
-welcome_message()
-args0 = ['-h', '--help']
-args1 = ['-F', '-O']
-args2 = ['-g', '-s', '-o', '-n', '-t', '-a']
-'''
-
 
 def main():
-    pkg_requirements()
-    py_version()
-    welcome_message()
-    args1 = ['-F', '-O']
-    args2 = ['-g', '-s', '-o', '-n', '-t', '-a']
+    args1 = [('-D', '--DIR'), ('-O', '--OUT')]
+    args2 = [('-g', '--geno'), ('-s', '--snps'), ('-o', '--out'),
+             ('-n', '--samples'), ('-t', '--type'), ('-a', '--alleles')]
 
     if len(sys.argv) == 1:
         from parse_args import msg
-        print("\nrun `./snprecode.py -h` for full argument list\nbasic usage: ", msg())
+        print(msg())
         del msg
         raise SystemExit
 
-    elif sys.argv[1] == '-h' or sys.argv[1] == '-help':
+    elif sys.argv[1] == '-h' or sys.argv[1] == '--help':
         import geno2fi
         geno2fi
         del geno2fi
         raise SystemExit
 
-    elif any(x in sys.argv[1:] for x in args1):
-        gg = set([i for i in sys.argv[1:] if i.startswith('-')])
-        if set(args1) - gg:
-            bomb(f'Missing argument {list(set(args1) - gg)}\n'
-                 'Error: run `./snprecode -h` for complete arguments list\n')
+    elif any(x in sys.argv[1:] for x in list(itertools.chain(*args1))):
+        x = set([item for item in args1 for a in sys.argv[1:] if a in item])
+        y = set([item for item in args1 for a in sys.argv[1:] if a not in item])
+        z = list(x.symmetric_difference(y))
+        if z:
+            bomb(f'Missing argument when trying to convert to fimpute:\n'
+                 f'       required args: {z}\n'
+                 f'       try `./snprecode -h` for complete arguments list\n')
 
         from check_path import check_path
         if not check_path():
             print("File path OK...")
+        else:
+            print(check_path())
         del check_path
-        
+
         from garbage import check_dups
         if not check_dups():
-            print("File check complete...")
+            print("File check complete...\n")
         del check_dups
 
         import geno2fi
@@ -56,24 +50,38 @@ def main():
         del geno2fi
         raise SystemExit
 
-    elif any(x in sys.argv[1:] for x in args2):
-        gg = set([i for i in sys.argv[1:] if i.startswith('-')])
-        if set(args2) - gg:
-            bomb(f"Missing argument {list(set(args2) - gg)}\n"
-                 "Error: run `./snprecode -h` for complete arguments list\n")
-
-        #if [file_ for file_ in sys.argv[1:] if not isfile(file_) and '-o' not in sys.argv[1:]]:
-        if [file_ for file_ in sys.argv[1:] if not isfile(file_) and all(x not in sys.argv[1:] for x in ['-o', '--out'])]:
-            bomb(f"Check if all input files exists in file path and are non-empty\n")
+    elif any(x in sys.argv[1:] for x in list(itertools.chain(*args2))):
+        x = set([item for item in args2 for a in sys.argv[1:] if a in item])
+        y = set([item for item in args2 for a in sys.argv[1:] if a not in item])
+        z = list(x.symmetric_difference(y))
+        if z:
+            bomb(f"Missing argument when trying to convert from fimpute\n"
+                 f"       required args: {z}\n"
+                 f"       try: `./snprecode -h` for complete arguments list\n")
 
         import fi2geno
         fi2geno
         del fi2geno
         raise SystemExit
 
+    elif [item for item in sys.argv[1:] if item.endswith(('bim', 'map'))]:
+        import snpinfo
+        snpinfo
+        del snpinfo
+        raise SystemExit
+
+    elif [item for item in sys.argv[1:] if item.endswith(('vcf', 'vcf.gz'))]:
+        import geno_corr
+        geno_corr
+        del geno_corr
+        raise SystemExit
+
     else:
-        pass
+        bomb('Unknown argument(s)\n       try ./snprecode -h')
 
 
 if __name__ == "__main__":
+    welcome_message()
+    py_version()
+    pkg_requirements()
     main()

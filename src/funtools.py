@@ -9,14 +9,12 @@ def welcome_message():
     print(
         """----------------------------------------
 FImpute helper utility (Version 1.0.1)
-Copyright (C) 2014-2020 Andrew G. Marete
-----------------------------------------
-""")
+Copyright (C) 2018-2020 Andrew Marete
+----------------------------------------""")
 
 
 # function to display Error messages
 def bomb(message):
-    # print("ERROR: " + message)
     print(f"Error: {message}")
     raise SystemExit
 
@@ -115,3 +113,38 @@ def find_common(data):
         if len(flipped[i]) > 1:
             out.append(i)
     return out
+
+
+# Correlations
+def mean_(list0):
+    total = 0
+    for a in list0:
+        total += float(a)
+    return total / len(list0)
+
+
+def std(list0):
+    listMean = mean_(list0)
+    dev = 0.0
+    for i in range(len(list0)):
+        dev += (list0[i] - listMean) ** 2
+    return dev ** (1 / 2.0)
+
+
+def allelic_r2(list0, list1):
+    # First establish the means and standard deviations for both lists.
+    xMean = mean_(list0)
+    yMean = mean_(list1)
+    xStandDev = std(list0)
+    yStandDev = std(list1)
+    # r numerator
+    rNum = 0.0
+    for i in range(len(list0)):
+        rNum += (list0[i] - xMean) * (list1[i] - yMean)
+
+    # r denominator
+    rDen = xStandDev * yStandDev
+    try:
+        return round((rNum / rDen) ** 2, ndigits=4)
+    except ZeroDivisionError:
+        return 0

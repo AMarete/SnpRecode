@@ -6,20 +6,27 @@ import argparse
 
 def msg():
     return '''
+    basic usage : ./snprecode -h
     
-    Convert to fimpute format: 
-    snprecode \\
-    -F /path/to/vcf/plink/files \\
+    ==> Convert to fimpute format: 
+    ./snprecode \\
+    -D /path/to/vcf/plink/files \\
     -O PREFIX 
     
-    Convert from fimpute format:
-    snprecode \\
+    ==> Convert from fimpute format:
+    ./snprecode \\
     -g genotypes_imp.txt \\
     -s snps.txt \\
     -n samples.txt \\ 
     -t 1=vcf; 2=ped|map \\ 
     -a alleles.txt \\
     -o PREFIX
+    
+    ==> Calculate genotype correlation between two (un)compressed vcf
+    ./snprecode --file file1.vcf.gz file2.vcf.gz
+    
+    ==> Create an fimpute acceptable snp_info file from one or more plink maps (bim and/or map), max=10 files
+    ./snprecode --file [file_1.map, ..., file_n.bim]
     '''
 
 
@@ -28,7 +35,7 @@ def my_parser():
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
     # required.add_argument(' ', nargs='*')
-    optional.add_argument("-F", "--FILEPATH", metavar="\b", action="store", dest="filePath",
+    optional.add_argument("-D", "--DIR", metavar="\b", action="store", dest="filePath",
                           help="dir with vcf and/or ped|map files for converting")
     optional.add_argument("-O", "--OUT", metavar="\b", action="store", dest="OUT",
                           help="PREFIX for fimpute input files")
@@ -48,6 +55,7 @@ def my_parser():
                           help="link code: 1 for vcf, 2 for ped|map")
     optional.add_argument("-a", "--alleles", metavar="\b", action="store", dest="allele",
                           help="column file with alleles formatted as: chrom_pos_ref_alt")
+    optional.add_argument("--file", type=argparse.FileType("r"), nargs='+', metavar=('file1','file2'))
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
