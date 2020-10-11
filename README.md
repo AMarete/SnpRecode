@@ -73,4 +73,4 @@ run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargo
 	
 <b>Plink snp info files</b>: If one already has fimpute acceptable genotype files from one or more files, and they want to generate an fimpute acceptable snp info file corresponding to the genotypes, the option ```./snprecode --file file1.map [file2.map ... filen.map]``` can be used to create such a snp info file. Upto 10 files are allowed since fimpute software can only impute 10 chips at a time. Both bim and ped files are acceptable.
 
-<b>[Example implementation script]</b>(https://raw.githubusercontent.com/AMarete/fimpute-utils/master/test_data/Example.sh)
+[<b>Example implementation script</b>](https://raw.githubusercontent.com/AMarete/fimpute-utils/master/test_data/Example.sh)
