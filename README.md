@@ -64,10 +64,7 @@ If such errors are found, a file with errors will be generated: ```Error.txt```<
 	```{prefix}.alleles ``` to decode fimpute output<br/>
 run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 
-<b>Recode back to vcf</b>:```./snprecode -g genotypes_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {prefix}.alleles -o {prefix}```. If the ```-t 2``` switch is used, a plink ped/map file will be generated.
-
-A final file with study samples will be produced for downstream analysis e.g ```{PREFIX_2}.vcf.gz```<br/>. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions 
-
+<b>Recode back to vcf</b>:```./snprecode -g geno_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {prefix}.alleles -o {prefix2}```. <br/>If the ```-t 2``` switch is used, a plink ped/map file will be generated. A final file with study samples will be produced for downstream analysis e.g ```{prefix2}.vcf.gz```<br/>. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions.<br/>
 
 <b>Genotype correlation</b>: To estimate the imputation accuracy, we have implemented a dosage correlation estimator between a real and masked genotype. One can mask a percentage of the reference population pre-imputation, impute it as if the alleles were missing, and compare the now imputed masked genotype to the original genotype.<br/>This can be achieved by running ```./snprecode --file file1.vcf.gz file2.vcf.gz```. The two files have to have samples occuring in the same sequence otherwise SnpRecode will stop running. A successful run produce two files:<br/>
 	```genotype_R2.txt``` contains the R-square values per SNP<br/>
