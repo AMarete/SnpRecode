@@ -71,4 +71,4 @@ run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargo
 	```genotype_R2.pdf``` A graph showing distribution of R-square by minor allele frequency <br/>
 	![ ](https://github.com/AMarete/fimpute-utils/blob/master/test_data/genotype_R2.png?raw=true)
 	
-<b>Plink snp info files</b>: If one already has fimpute acceptable genotype files from two or more files, and they want to generate an fimpute acceptable snp info file corresponding to the genotypes, the option ```./snprecode --file file1.map, ..., filen.map``` can be used to create such a snp info file. Upto 10 files are allowed since fimpute software can only impute 10 chips at a time. Both bim and ped files are acceptable.
+<b>Plink snp info files</b>: If one already has fimpute acceptable genotype files from one or more files, and they want to generate an fimpute acceptable snp info file corresponding to the genotypes, the option ```./snprecode --file file1.map [file2.map ... filen.map]``` can be used to create such a snp info file. Upto 10 files are allowed since fimpute software can only impute 10 chips at a time. Both bim and ped files are acceptable.
