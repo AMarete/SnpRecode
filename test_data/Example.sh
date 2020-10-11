@@ -51,18 +51,18 @@ cat val_samples.txt ref.masked.txt > val_ref_mask_samples.txt
 # Compare SNP between chips
 bcftools query -f '%CHROM\t%POS\n' REF.vcf.gz > ref.snp.txt &
 bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt1.vcf.gz > dt1.snp.txt &
-bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt2.vcf.gz >> dt1.snp.txt &
+bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt2.vcf.gz >> dt12.snp.txt &
 wait 
 
 # remove duplicates
-echo "$(awk '!seen[$x]++' dt1.snp.txt)" > dt1.snp.txt
+echo "$(awk '!seen[$x]++' dt12.snp.txt)" > dt12.snp.txt
 
-# subset snp in both val and ref
-awk -F '\t' 'NR==FNR {id[$1"_"$2]; next} $1"_"$2 in id' dt1.snp.txt  ref.snp.txt | awk '{print $1"\t"$2}' >  ref.snp.masked.txt
+# subset snp common to both val and ref
+awk -F '\t' 'NR==FNR {id[$1"_"$2]; next} $1"_"$2 in id' dt12.snp.txt  ref.snp.txt | awk '{print $1"\t"$2}' >  ref.snp.masked.txt
 
 # split the REF dataset:
-# 1. does not have the anims whose genotypes is to be masked ie the new REF
-# 2. contains the randomly selected subset of ref anims and snp available in the validation data
+# 1. does not have the samples whose genotypes is to be masked ie the new REF
+# 2. contains the randomly selected subset of ref samples and snp available in the validation data
 bcftools index REF.vcf.gz 
 bcftools view -S ^ref.masked.txt -Oz -o ${tmp1}/ref.vcf.gz  REF.vcf.gz &
 bcftools view -S ref.masked.txt  -R ref.snp.masked.txt -Oz -o ${tmp1}/ref.masked.vcf.gz REF.vcf.gz &
@@ -70,7 +70,8 @@ wait
 
 # convert to fimpute format using SnpRecode
 # $tmp1 has four files: ref.vcf.gz, ref.masked.vcf.gz, dt1.vcf.gz, and dt2.vcf.gz (or if not normalized val2.ped and val2.ped)
-/home/amarete/bin/snprecode -D $tmp1 -O tot
+# SnpRecode generates three files: [tot.geno, tot.mark] for fimpute, and [tot.alleles] to decode fimpute output
+./snprecode -D $tmp1 -O tot
 
 # impute
 if [[ ! -d output ]]; then mkdir -p output ; else rm -f output/* ; fi
@@ -85,7 +86,7 @@ EOF
 ./FImpute par.txt
 
 # convert back to vcf
-/home/amarete/bin/snprecode \
+./snprecode \
 -g output/genotypes_imp.txt \
 -s output/snp_info.txt \
 -n val_ref_mask_samples.txt \
@@ -100,8 +101,7 @@ bcftools view -S ref.masked.txt -Oz -o true.vcf.gz  REF.vcf.gz &
 bcftools view -S ref.masked.txt -Oz -o mask.vcf.gz  bis.vcf.gz &
 wait
 
-# imputation accuracy
-/home/amarete/bin/snprecode --file true.vcf.gz mask.vcf.gz
+./snprecode --file true.vcf.gz mask.vcf.gz
 mv genotype_R2.* $path1
 
 # Extract study samples
@@ -109,3 +109,5 @@ bcftools view -S val_samples.txt -Oz -o ${path1}/imputed.vcf.gz bis.vcf.gz
 
 cd $path0
 rm -rf $tmp0
+
+# $path1 should have three files: imputed_file, genotype_correlation files [.txt and .pdf]
