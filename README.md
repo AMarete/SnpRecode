@@ -31,16 +31,10 @@ basic usage:
     Create an fimpute acceptable snp_info file from one or more plink maps (bim and/or map), max=10 files
     ./snprecode --file [file_1.map, ..., file_n.bim]
 
-<b>Example workflow:</b> On occasion plink tends to flip alleles, its therefore best to use a normalized vcf file as follows:
-convert plink to vcf:
-
-	plink —{species} --file {file} —recode vcf-iid —out {file}
-
-compress with bgzip:<br/> 
-  ```bgzip {file}```
-
-normalize the vcf with the reference fasta genome, [bcftools](https://samtools.github.io/bcftools/) is a great tool for this:
-if working with sequence data (>1m snp/chrom) there is need to split data per chromosome, the -r flag can be used
+<b>Example workflow:</b> On occasion plink tends to flip alleles, its therefore best to use a normalized vcf file as follows:<br/>
+– convert plink to vcf: ```plink —{species} --file {file} —recode vcf-iid —out {file}```<br/>
+– compress with bgzip and create a vcf index: ```bgzip {file} && bcftools index {file}```<br/>
+– normalize the vcf with the reference fasta genome, [bcftools](https://samtools.github.io/bcftools/) is a great tool for this. If working with sequence data (>1m snp/chrom) there is need to split data per chromosome, the -r flag can be used: <br/>
 
 	bcftools norm -d snps -cs -f {ref_genome.fa} -r {chrom} {file.vcf.gz} | bcftools view -m2 -M2 -Oz -o {file2.vcf.gz} 
 
