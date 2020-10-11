@@ -34,14 +34,14 @@ basic usage:
 <b>Example workflow:</b> On occasion plink tends to flip alleles, its therefore best to use a normalized vcf file as follows:<br/>
 – convert plink to vcf: ```plink —{species} --file {file} —recode vcf-iid —out {file}```<br/>
 – compress with bgzip and create a vcf index: ```bgzip {file} && bcftools index {file}```<br/>
-– normalize the vcf with the reference fasta genome, [bcftools](https://samtools.github.io/bcftools/) is a great tool for this. If working with sequence data (>1m snp/chrom) there is need to split data per chromosome, the -r flag can be used: <br/>
+– normalize the vcf with the reference fasta genome, [bcftools](https://samtools.github.io/bcftools/) is a great tool for this. If working with sequence data (>1million snp/chrom) there is need to split data per chromosome, the -r flag can be used: <br/>
 
 	bcftools norm -d snps -cs -f {ref_genome.fa} -r {chrom} {file.vcf.gz} | bcftools view -m2 -M2 -Oz -o {file2.vcf.gz} 
 
 However if one really needs to use plink, then the procedure below could be followed:<br/>
-convert the plink file to binary format<br/>
-change the snp name to chrom_pos_ref_alt<br/>
-use option —recode 12 to generate plink files with alleles recoded as 1|2<br/>
+– convert the plink file to binary format<br/>
+– change the snp name to chrom_pos_ref_alt<br/>
+– use option —recode 12 to generate plink files with alleles recoded as 1|2<br/>
 
 	plink --{species} --file {file} --make-bed --real-ref-alleles -—out {dt1}
 	echo "$(awk '{$2=$1"_"$4"_"$5"_"$6 ;print $0 }' dt1.bim)" > dt1.bim
@@ -53,20 +53,18 @@ add the files to a temp directory e.g. assuming {file2.vcf.gz}, {dt2.ped, dt2.ma
 	```mv file2.vcf.gz tmp/```<br/>
 	```mv {other_ready_files} tmp```/<br/>
 
-run snprecode<br/>
-	```./snprecode -D tmp -O {PREFIX} ```
+run SnpRecode: 	```./snprecode -D tmp -O {prefix} ```<br/>
 
 the program will stop if:<br/>
     ```– duplicate snp(s) or sample(s) found within or between files```<br/>
     ```– files have different chromosome count and/or different chromosome names```
 
 If such errors are found, a file with errors will be generated: ```Error.txt```<br/>. If no errors are found, SnpRecode generates 3 files: <br/>
-	```{PREFIX}.geno, {PREFIX}.mark ```as inputs for fimpute and <br/>
-	```{PREFIX}.alleles ``` to decode fimpute output<br/>
-
+	```{prefix}.geno, {prefix}.mark ```as inputs for fimpute and <br/>
+	```{prefix}.alleles ``` to decode fimpute output<br/>
 run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 
-<b>Recode back to vcf</b>:```./snprecode -g genotypes_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {PREFIX}.alleles -o {PREFIX_2}```. If the ```-t 2``` switch is used, a plink ped/map file will be generated.
+<b>Recode back to vcf</b>:```./snprecode -g genotypes_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  {prefix}.alleles -o {prefix}```. If the ```-t 2``` switch is used, a plink ped/map file will be generated.
 
 A final file with study samples will be produced for downstream analysis e.g ```{PREFIX_2}.vcf.gz```<br/>. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions 
 
