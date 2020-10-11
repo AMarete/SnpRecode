@@ -79,5 +79,6 @@ A final file with study samples will be produced for downstream analysis e.g ```
 
 <b>Genotype correlation</b>: To estimate the imputation accuracy, we have implemented a dosage correlation estimator between a real and masked genotype. One can mask a percentage of the reference population pre-imputation, impute it as if the alleles were missing, and compare the now imputed masked genotype to the original genotype.<br/>This can be achieved by running ```./snprecode --file file1.vcf.gz file2.vcf.gz```. The two files have to have samples occuring in the same sequence otherwise SnpRecode will stop running. A successful run produce two files:<br/>
 	```genotype_R2.txt``` contains the R-square values per SNP<br/>
-	```genotype_R2.pdf``` A graph showing distribution of R-square by minor allele frequency<br/>
+	```genotype_R2.pdf``` A graph showing distribution of R-square by minor allele frequency <br/>
+	![Example](https://github.com/AMarete/fimpute-utils/raw/master/test_data/genotype_R2.pdf)
 	
