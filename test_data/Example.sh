@@ -2,6 +2,8 @@
 set -e
 set -o pipefail
 
+# andrew.marete@canada.ca
+
 # Check pre-requisites
 if  ! command -v snprecode &> /dev/null; then echo "SnpRecode not found"; exit;  fi
 if  ! command -v bcftools &> /dev/null; then echo "bcftools not found"; exit;  fi
