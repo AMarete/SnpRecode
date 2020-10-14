@@ -69,8 +69,13 @@ run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargo
 <b>Genotype correlation</b>: To estimate the imputation accuracy, we have implemented a dosage correlation estimator between a real and masked genotype. One can mask a percentage of the reference population pre-imputation, impute it as if the alleles were missing, and compare the now imputed masked genotype to the original genotype. Such a comparison can be achieved by running ```./snprecode --file file1.vcf.gz file2.vcf.gz```. The two files have to have samples occuring in the same sequence otherwise SnpRecode will stop running. A successful run produce two files:<br/>
 	```genotype_R2.txt``` contains the R-square values per SNP<br/>
 	```genotype_R2.pdf``` A graph showing distribution of minor allele frequency by R-square as shown below: <br/>
-	![ ](https://github.com/AMarete/fimpute-utils/blob/master/test_data/genotype_R2.png?raw=true)
-	
+
+<p align="center">
+  <img width="474" height="421" src="https://github.com/AMarete/fimpute-utils/blob/master/test_data/genotype_R2.png">
+</p>
+
 <b>Plink snp info files</b>: If one already has fimpute acceptable genotype files from one or more files, and they want to generate an fimpute acceptable snp info file corresponding to the genotypes, the option ```./snprecode --file file1.map [file2.map ... filen.map]``` can be used to create such a snp info file. Upto 10 files are allowed since fimpute software can only impute 10 chips at a time. Both bim and ped files are acceptable.
 
 [<b>Example implementation script</b>](https://raw.githubusercontent.com/AMarete/fimpute-utils/master/test_data/Example.sh)
+
+
