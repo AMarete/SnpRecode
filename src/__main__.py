@@ -6,12 +6,20 @@ import itertools
 from check_modules import py_version, pkg_requirements
 from funtools import welcome_message, bomb
 
+py_version()
+pkg_requirements()
+welcome_message()
+
 
 def main():
     args1 = [('-D', '--DIR'), ('-O', '--OUT')]
     args2 = [('-g', '--geno'), ('-s', '--snps'), ('-o', '--out'),
              ('-n', '--samples'), ('-t', '--type'), ('-a', '--alleles')]
-
+    '''
+    py_version()
+    pkg_requirements()
+    welcome_message()
+    '''
     if len(sys.argv) == 1:
         from parse_args import msg
         print(msg())
@@ -40,9 +48,10 @@ def main():
             print(check_path())
         del check_path
 
-        from garbage import check_dups
+        from garbage import check_dups, file_list
         if not check_dups():
-            print("File check complete...\n")
+            print("File check complete...\nFiles to be processed...\n")
+            print('\n'.join(map(str, file_list)))
         del check_dups
 
         import geno2fi
@@ -81,7 +90,4 @@ def main():
 
 
 if __name__ == "__main__":
-    welcome_message()
-    py_version()
-    pkg_requirements()
     main()
