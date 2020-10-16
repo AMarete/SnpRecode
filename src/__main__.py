@@ -6,9 +6,11 @@ import itertools
 from check_modules import py_version, pkg_requirements
 from funtools import welcome_message, bomb
 
+welcome_message()
+print("checking system requirements...")
 py_version()
 pkg_requirements()
-welcome_message()
+print("system requirements met...")
 
 
 def main():
