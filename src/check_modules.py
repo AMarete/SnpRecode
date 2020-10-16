@@ -18,4 +18,4 @@ def pkg_requirements():
     installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
     required = ['biopython', 'matplotlib']
     if not set(required).issubset(installed_packages):
-        bomb(f"install package(s) {required} with: pip3 install {' '.join(list(required))}\n")
+ i       bomb(f"install package(s) {required} with: pip install {' '.join(list(required))}\n")
