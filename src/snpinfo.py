@@ -35,12 +35,12 @@ for index, file in enumerate(file_list):
             chrom, snp, cm, pos, A1, A2 = line.strip().split('\t')
         except ValueError:
             chrom, snp, cm, pos = line.strip().split()
-        if snp + ":" + chrom + ":" + pos not in markers.keys():
+        if chrom + ":" + pos not in markers.keys():
             mark_chip = list('0' * len(file_list))
             mark_chip[index] = snp_number
             markers[snp + ":" + chrom + ":" + pos] = mark_chip
             snp_number += 1
-        elif snp + ":" + chrom + ":" + pos in markers.keys():
+        elif chrom + ":" + pos in markers.keys():
             value = list(markers[snp + ":" + chrom + ":" + pos])
             value[index] = snp_number
             markers[snp + ":" + chrom + ":" + pos] = value
