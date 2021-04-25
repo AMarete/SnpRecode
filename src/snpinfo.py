@@ -26,35 +26,39 @@ for file in in_files:
     file_list[file] = len(open(file).readlines())
 file_list = sorted(file_list, key=file_list.get, reverse=True)
 
+mark_chip = list('0' * len(file_list))
+
 # read file
-for index, file in enumerate(file_list):
-    snp_number = 1
-    chip = index + 1
-    for line in open(file, 'r'):
+for chip, file in enumerate(file_list):
+    for snp_number, line in enumerate(open(file, 'r')):
         try:
-            chrom, snp, cm, pos, A1, A2 = line.strip().split('\t')
+            chrom, snpname, cm, pos, A1, A2 = line.strip().split('\t')
         except ValueError:
-            chrom, snp, cm, pos = line.strip().split()
-        if chrom + ":" + pos not in markers.keys():
-            mark_chip = list('0' * len(file_list))
-            mark_chip[index] = snp_number
-            markers[snp + ":" + chrom + ":" + pos] = mark_chip
-            snp_number += 1
-        elif chrom + ":" + pos in markers.keys():
-            value = list(markers[snp + ":" + chrom + ":" + pos])
-            value[index] = snp_number
-            markers[snp + ":" + chrom + ":" + pos] = value
-            snp_number += 1
+            chrom, snpname, cm, pos = line.strip().split()
+
+        key = chrom + ":" + pos
+
+        if key not in markers:
+            markers[key] = [snpname] + mark_chip
+        if key in markers:
+            value = list(markers[key])
+            value[chip+1] = snp_number + 1
+            markers[key] = value
 
 # Create a comprehensive snps file
 # Sort the snps by chrom then pos and write index
 mark = []
 for row in [list(flatten(i)) for i in list(markers.items())]:
-    row.insert(1, row[0].split(":")[0])
-    row.insert(2, row[0].split(":")[1])
-    row.insert(3, row[0].split(":")[2])
-    mark.append(row[1:])
-
+    row.insert(0, row[1])
+    row.insert(1, row[1].split(":")[0])
+    row.insert(2, row[2].split(":")[1])
+    row.pop(3)
+    row.pop(3)
+    mark.append(row)
+'''
+for row in mark:
+    print(row)
+'''
 mark = sorted(mark, key=lambda x: (int(x[1]), int(x[2])))
 
 f_out = "snpinfo.txt"
@@ -71,3 +75,4 @@ print(f"\nSuccess! created {f_out}")
 print("Runtime (H:M:S): %d:%d:%d\n" % (hours, mins, secs))
 print("\n")
 raise SystemExit
+
