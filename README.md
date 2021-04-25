@@ -60,7 +60,7 @@ the program will stop if:<br/>
     ```– files have different chromosome count and/or different chromosome names```
 
 If such errors are found, a file with errors will be generated: ```Error.txt```. If no errors are found, SnpRecode generates 3 files: <br/>
-```{prefix}.geno, {prefix}.mark ```as inputs for fimpute and ```{prefix}.alleles ``` to decode fimpute output.<br/>
+```{prefix}.geno, {prefix}.mark ```as inputs for fimpute and ```alleles.txt ``` to decode fimpute output.<br/>
 
 run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 
