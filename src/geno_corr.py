@@ -18,7 +18,8 @@ for item in my_parser().file:
     if item.name.endswith(('vcf', 'vcf.gz')):
         in_files.append(item.name)
 if len(in_files) != 2:
-    bomb("two vcf files required to calculate genotype correlation\n       try: `./snprecode --file vcf1 vcf2`")
+    bomb('''two vcf files required to calculate genotype correlation\n       
+         try: `./snprecode --file vcf1 vcf2''')
 
 '''
 file1 = my_parser().file[0].name
@@ -77,8 +78,8 @@ for line in mat2:
         continue
 
 if samples[0] != samples[1]:
-    print(f'Error: different or unordered samples in {file1} and {file2}\n'
-          f'       Samples in the two vcf has to be same and ordered')
+    print(f'''Error: different or unordered samples in {file1} and {file2}\n       
+          Samples in the two vcf has to be same and ordered''')
     raise SystemExit
 
 result = {k: v for k, v in result.items() if len(v) == 3}
