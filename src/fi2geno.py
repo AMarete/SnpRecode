@@ -125,10 +125,7 @@ with geno_info as gfile:
                                  6: '0 0', 7: '0 0', 8: '0 0', 9: '0 0'}
                     geno_tot.append(geno_ACGT[int(a)])
             geno_out.write('%s %s %s \n' % (''.join(sample_id), ''.join(sample_id), ' '.join(geno_tot)))
-'''
-for l in vcfsnps:
-    print(l)
-'''
+
 # continue writing VCF
 if toto == 1:
     for row in zip(vcfsnps, [*zip(*genotypes)]):
