@@ -7,9 +7,6 @@ from funtools import bomb, open_by_suffix, flatten, file_by_size, to_mat, line_c
 from parse_args import my_parser
 from garbage import file_list
 
-#print(file_list)
-
-
 start = timeit.default_timer()
 
 # from check_dups import vcf_dups, ped_dups
