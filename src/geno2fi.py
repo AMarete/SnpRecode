@@ -14,9 +14,9 @@ start = timeit.default_timer()
 
 # from check_dups import vcf_dups, ped_dups
 # Open output files
-fi = my_parser().OUT + ".geno"
-fo = my_parser().OUT + ".mark"
-fe = my_parser().OUT + ".allele"
+fi = my_parser().OUT + "_geno.txt"
+fo = my_parser().OUT + "_snps.txt"
+fe = my_parser().OUT + "_alleles"
 
 geno_out = open(fi, "w")
 mark_out = open(fo, "w")
@@ -50,9 +50,9 @@ for index, file in enumerate(file_list):
 
                 if bta != '#CHROM ' and pos != 'POS':
                     if bta + ":" + pos not in snps_list.keys():
-                        snps_list[bta + ":" + pos] = [ref + '_' + alt]
+                        snps_list[bta + ":" + pos] = [bta, snp, "0", pos, ref, alt]
                     # elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos] != [ref + '_' + alt]:
-                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][0].split('_')[0] != ref:
+                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4] != ref:
                         print('Some REF/ALT may be flipped \n'
                               'Normalize VCF files e.g. `bcftools norm -f [REF_GENOME] ... `\n')
                         raise SystemExit
@@ -110,11 +110,11 @@ for index, file in enumerate(file_list):
                     # if snp.split('_')[0] + ":" + snp.split('_')[1] not in snps_list.keys():
                     if bta + ":" + pos not in snps_list.keys():
                         # snps_list[snp.split('_')[0] + ":" + snp.split('_')[1]] = [ref + '_' + alt]
-                        snps_list[bta + ":" + pos] = [ref + '_' + alt]
+                        snps_list[bta + ":" + pos] = [bta, snp, cm, pos, ref, alt]
                     # elif snp.split('_')[0] + ":" + snp.split('_')[1] in snps_list.keys():
                     elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos] == [alt + '_' + ref]:
                         print(f'Warning: Allele flipped for SNP {snp} in PLINK file(s)')
-                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][0].split('_')[0] != ref:
+                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4] != ref:
                         print(f'Warning: Possible erroneous allele for SNP {snp} in PLINK file(s), normalize with '
                               f'`bcftools norm`')
                 except IndexError:
@@ -138,9 +138,9 @@ for row in mark:
     mark_out.write(' '.join(str(e) for e in row) + '\n')
 
 # Write a snp list with ref/alt information
-for row in [list(flatten(i)) for i in list(snps_list.items())]:
-    row = row[0].replace(':', '_') + '_' + row[1]
-    allele_out.write(''.join(row) + '\n')
+for row in [list(flatten(i)) for i in list(snps_list.values())]:
+    #row = row[0].replace(':', '_') + '_' + row[1]
+    allele_out.write('\t'.join(row) + '\n')
 
 if len(mark) - len(snps_list) > 0:
     dd = len(mark) - len(snps_list)
