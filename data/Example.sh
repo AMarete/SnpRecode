@@ -50,7 +50,7 @@ cat val_samples.txt ref.masked.txt > val_ref_mask_samples.txt
 
 # Compare SNP between chips
 bcftools query -f '%CHROM\t%POS\n' REF.vcf.gz > ref.snp.txt &
-bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt1.vcf.gz > dt1.snp.txt &
+bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt1.vcf.gz > dt12.snp.txt &
 bcftools query -f '%CHROM\t%POS\n' ${tmp1}/dt2.vcf.gz >> dt12.snp.txt &
 wait 
 
