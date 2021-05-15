@@ -63,14 +63,14 @@ with samples as file:
         study_samples.append(line.strip())
 
 # Fimpute snp info
-#snps = {}
-snps = []
+snps = {}
+# snps = []
 with snp_info as file:
     next(file)
     for line in file:
         snpid, chrom, pos, chips = line.strip().split('\t', 3)
-        # snps[chrom + ":" + pos] = [chrom, pos, snpid]
-        snps.append(chrom + ":" + pos)
+        snps[chrom + ":" + pos] = [chrom, pos, snpid]
+        # snps.append(chrom + ":" + pos)
 
 # Alleles file
 alleles = {}
@@ -94,8 +94,9 @@ for key in snps:
         
 vcf_snps = vcfsnps.values()
 '''
+marks = snps.keys()
 
-vcf_snps = {k: alleles[k] for k in alleles.keys() & set(snps)}
+vcf_snps = {k: alleles[k] for k in alleles.keys() & set(marks)}
 vcfsnps = vcf_snps.values()
 
 vcfsnps = sorted(vcfsnps, key=lambda x: (int(x[0]), int(x[1])))
