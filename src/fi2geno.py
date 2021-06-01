@@ -64,7 +64,8 @@ with samples as file:
 
 # Fimpute snp info
 snps = {}
-# snps = []
+plink_info = {}
+count = 0
 with snp_info as file:
     next(file)
     for line in file:
@@ -72,32 +73,32 @@ with snp_info as file:
         snps[snpid.lower()] = [chrom, pos, snpid]
         # snps[chrom + ":" + pos] = [chrom, pos, snpid]
         # snps.append(chrom + ":" + pos)
+        plink_info[count] = [snpid.lower()]
+        count += 1
 
 # Alleles file
-alleles = {}
+vcf_a1a2 = {}
+plink_ACGT = {}
+count = 0
 with allele_info as file:
     for line in file:
-        chrom, snp, cm, pos, ref, alt = line.strip().split()
-        alleles[snp.lower()] = [chrom, pos, snp, ref, alt, ".", "PASS", ".", "GT"]
-        # alleles[chrom + ":" + pos] = [chrom, pos, snp, ref, alt, ".", "PASS", ".", "GT"]
+        chrom, snp, cm, pos, a1, a2 = line.strip().split()
+        vcf_a1a2[snp.lower()] = [chrom, pos, snp, a1, a2, ".", "PASS", ".", "GT"]
+        # vcf_a1a2[chrom + ":" + pos] = [chrom, pos, snp, a1, a2, ".", "PASS", ".", "GT"]
+        if a1 == '.': a1 = '0'
+        if a2 == '.': a2 = '0'
+        if a1 == '0':  # monomorphic snp (A1=0)
+            plink_ACGT[snp.lower()] = [a1 + ' ' + a1, a1 + ' ' + a1, a2 + ' ' + a2, a1 + ' ' + a1,
+                                       a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1,
+                                       a1 + ' ' + a1, a1 + ' ' + a1, snp]
+        else:
+            plink_ACGT[snp.lower()] = [a1 + ' ' + a1, a1 + ' ' + a2, a2 + ' ' + a2, a1 + ' ' + a2,
+                                       a2 + ' ' + a1, '0 0', '0 0', '0 0', '0 0', '0 0', snp]
+        count += 1
 
 # For VCF only
 # Add header for first 9 lines and write vcf
-'''
-if set(snps).issubset(set(alleles)):
-    vcf_snps = [v for v in alleles.values()]
-
-vcfsnps = {}
-for key in snps:
-    try:
-        vcfsnps[key] = alleles[key]
-    except KeyError:
-        bomb(f"{key} missing in allele file")
-        
-vcf_snps = vcfsnps.values()
-'''
-
-vcfsnps = {k: alleles[k] for k in alleles.keys() & set(snps.keys())}.values()
+vcfsnps = {k: vcf_a1a2[k] for k in vcf_a1a2.keys() & set(snps.keys())}.values()
 vcfsnps = sorted(vcfsnps, key=lambda x: (int(x[0]), int(x[1])))
 vcfsnps.insert(0, ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
 genotypes = []
@@ -117,14 +118,8 @@ with geno_info as gfile:
             genotypes.append(row)
         elif toto == 2:
             for n, a in enumerate(geno):
-                try:
-                    geno_ACGT = {0: '1 1', 1: '1 2', 2: '2 2', 5: '0 0'}
-                    geno_tot.append(geno_ACGT[int(a)])
-                except KeyError:
-                    geno_ACGT = {0: '1 1', 1: '1 2', 2: '2 2', 3: '1 2', 4: '2 1', 5: '0 0',
-                                 6: '0 0', 7: '0 0', 8: '0 0', 9: '0 0'}
-                    geno_tot.append(geno_ACGT[int(a)])
-            geno_out.write('%s %s %s \n' % (''.join(sample_id), ''.join(sample_id), ' '.join(geno_tot)))
+                geno_tot.append(plink_ACGT[plink_info[n][0]][int(a)])
+            geno_out.write('%s %s \n' % (' '.join([sample_id, sample_id, '0','0','2','-9' ]), ' '.join(geno_tot)))
 
 # continue writing VCF
 if toto == 1:
@@ -135,18 +130,10 @@ if toto == 1:
 # Map file for Ped
 if toto == 2:
     map_out = open(fo + ".map", "w")
-    '''
-    if my_parser().map:
-        map_out = open(my_parser().out + ".map", "w")
-    else:
-        bomb('Missing argument, "-m PREFIX", "--map PREFIX"\n'
-             'Error: run `./snprecode -h` for complete arguments list '
-             'required to recode from FImpute to PED/MAP\n')
-             '''
     map_ped = []
     for snp in snps.keys(): # snps is a list need to ammend this
         try:
-            ms = alleles[snp][0:3]
+            ms = vcf_a1a2[snp][0:3]
             ms.insert(0, '0')
             ms = [ms[i] for i in [1, 3, 0, 2]]
             map_ped.append(ms)
