@@ -45,7 +45,7 @@ if toto == 1:
     geno_out.write("".join(
         '''##fileformat=VCFv4.2
 ##filedate=%s
-##source="snprecode v1.0.1"
+##source="snprecode v1.0.3"
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ''' % (datetime.today().strftime('%Y%m%d'))
     ))
@@ -69,7 +69,8 @@ with snp_info as file:
     next(file)
     for line in file:
         snpid, chrom, pos, chips = line.strip().split('\t', 3)
-        snps[chrom + ":" + pos] = [chrom, pos, snpid]
+        snps[snpid.lower()] = [chrom, pos, snpid]
+        # snps[chrom + ":" + pos] = [chrom, pos, snpid]
         # snps.append(chrom + ":" + pos)
 
 # Alleles file
@@ -77,7 +78,8 @@ alleles = {}
 with allele_info as file:
     for line in file:
         chrom, snp, cm, pos, ref, alt = line.strip().split()
-        alleles[chrom + ":" + pos] = [chrom, pos, snp, ref, alt, ".", "PASS", ".", "GT"]
+        alleles[snp.lower()] = [chrom, pos, snp, ref, alt, ".", "PASS", ".", "GT"]
+        # alleles[chrom + ":" + pos] = [chrom, pos, snp, ref, alt, ".", "PASS", ".", "GT"]
 
 # For VCF only
 # Add header for first 9 lines and write vcf
@@ -94,11 +96,8 @@ for key in snps:
         
 vcf_snps = vcfsnps.values()
 '''
-marks = snps.keys()
 
-vcf_snps = {k: alleles[k] for k in alleles.keys() & set(marks)}
-vcfsnps = vcf_snps.values()
-
+vcfsnps = {k: alleles[k] for k in alleles.keys() & set(snps.keys())}.values()
 vcfsnps = sorted(vcfsnps, key=lambda x: (int(x[0]), int(x[1])))
 vcfsnps.insert(0, ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
 genotypes = []
@@ -145,7 +144,7 @@ if toto == 2:
              'required to recode from FImpute to PED/MAP\n')
              '''
     map_ped = []
-    for snp in snps.keys():
+    for snp in snps.keys(): # snps is a list need to ammend this
         try:
             ms = alleles[snp][0:3]
             ms.insert(0, '0')
