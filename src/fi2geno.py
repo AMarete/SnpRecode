@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import timeit
+import re
 from datetime import datetime
 from Bio import bgzf
 from funtools import flatten, bomb
@@ -69,7 +70,7 @@ count = 0
 with snp_info as file:
     next(file)
     for line in file:
-        snpid, chrom, pos, chips = line.strip().split('\t', 3)
+        snpid, chrom, pos, chips = re.sub('\s+','\t',line).split('\t', 3)
         snps[snpid.lower()] = [chrom, pos, snpid]
         # snps[chrom + ":" + pos] = [chrom, pos, snpid]
         # snps.append(chrom + ":" + pos)
