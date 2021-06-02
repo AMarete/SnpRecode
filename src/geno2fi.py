@@ -41,31 +41,27 @@ for index, file in enumerate(file_list):
                 # CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO,FORMAT,samples...
                 bta, pos, snp, ref, alt, qual, filter_, info, format_, genotype = line.strip().split("\t", 9)
                 bta = bta.replace('Chr', '')
-                # print([ii.split(':')[0] for ii in genotype.split('\t')])
                 geno.append(list(flatten([vcf_2_fimpute.get(i, i)
                                           for i in [ii.split(':')[0] for ii in genotype.split('\t')]])))
 
                 if bta != '#CHROM ' and pos != 'POS':
-                    if bta + ":" + pos not in snps_list.keys():
+                    if bta + ":" + pos not in snps_list:
                         snps_list[bta + ":" + pos] = [bta, snp, "0", pos, ref, alt]
-                    # elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos] != [ref + '_' + alt]:
-                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4].lower() != ref.lower():
+                    elif bta + ":" + pos in snps_list and snps_list[bta + ":" + pos][4].lower() != ref.lower():
                         print('Some REF/ALT may be flipped \n'
                               'Normalize VCF files e.g. `bcftools norm -f [REF_GENOME] ... `\n')
                         raise SystemExit
 
-                    key = bta + ":" + pos
                     snp_number += 1
-
-                    if key not in mark_tot.keys():
+                    if bta + ":" + pos not in mark_tot:
                         mark_chip = list('0' * len(file_list))
                         mark_chip[index] = snp_number
-                        mark_tot[key] = mark_chip
+                        mark_tot[bta + ":" + pos] = [snp, bta, pos] + mark_chip
 
-                    elif key in mark_tot.keys():
-                        value = list(mark_tot[key])
-                        value[index] = snp_number
-                        mark_tot[key] = value
+                    elif bta + ":" + pos in mark_tot:
+                        value = list(mark_tot[bta + ":" + pos])
+                        value[index+3] = snp_number
+                        mark_tot[bta + ":" + pos] = value
 
         for ii in [list(a) for a in zip(*geno)]:
             geno_out.write('{} {} {}\n'.format(ii[0], chip, ''.join(ii[1:])))
@@ -88,32 +84,28 @@ for index, file in enumerate(file_list):
             for line in f:
                 snp_number += 1
                 bta, snp, cm, pos = line.strip().split()
-                key = bta + ":" + pos
-                # key = snp
-                if key not in mark_tot.keys():
+
+                if bta + ":" + pos not in mark_tot:
                     value = list('0' * len(file_list))
                     value[index] = snp_number
-                    mark_tot[key] = value
+                    mark_tot[bta + ":" + pos] = [snp, bta, pos] + value
 
-                elif key in mark_tot.keys():
-                    value = list(mark_tot[key])
-                    value[index] = snp_number
-                    mark_tot[key] = value
+                elif bta + ":" + pos in mark_tot:
+                    value = list(mark_tot[bta + ":" + pos])
+                    value[index+3] = snp_number
+                    mark_tot[bta + ":" + pos] = value
                 else:
                     pass
                 try:
                     ref = snp.split('_')[2]
                     alt = snp.split('_')[3]
-                    # if snp.split('_')[0] + ":" + snp.split('_')[1] not in snps_list.keys():
                     if bta + ":" + pos not in snps_list.keys():
-                        # snps_list[snp.split('_')[0] + ":" + snp.split('_')[1]] = [ref + '_' + alt]
                         snps_list[bta + ":" + pos] = [bta, snp, cm, pos, ref, alt]
-                    # elif snp.split('_')[0] + ":" + snp.split('_')[1] in snps_list.keys():
                     elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos] == [alt + '_' + ref]:
                         print(f'Warning: Allele flipped for SNP {snp} in PLINK file(s)')
                     elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4] != ref:
-                        print(f'Warning: Possible erroneous allele for SNP {snp} in PLINK file(s), normalize with '
-                              f'`bcftools norm`')
+                        print(f'Warning: Possible erroneous allele for SNP {snp} in PLINK file(s)'
+                              f'normalize with `bcftools norm`')
                 except IndexError:
                     print(f'Warning: SNP {snp} in PLINK file(s) not indexed as `chrom_pos_ref_alt`')
                     # raise SystemExit
@@ -123,9 +115,7 @@ for index, file in enumerate(file_list):
 
 # Create a comprehensive snps file
 mark = []
-for row in [list(flatten(i)) for i in list(mark_tot.items())]:
-    row.insert(1, row[0].split(":")[0])
-    row.insert(2, row[0].split(":")[1])
+for row in [list(flatten(i)) for i in list(mark_tot.values())]:
     mark.append(row)
 
 # Sort the snps by chrom then pos and write index
@@ -136,7 +126,6 @@ for row in mark:
 
 # Write a snp list with ref/alt information
 for row in [list(flatten(i)) for i in list(snps_list.values())]:
-    #row = row[0].replace(':', '_') + '_' + row[1]
     allele_out.write('\t'.join(row) + '\n')
 
 if len(mark) - len(snps_list) > 0:

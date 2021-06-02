@@ -70,7 +70,7 @@ wait
 
 # convert to fimpute format using SnpRecode
 # $tmp1 has four files: ref.vcf.gz, ref.masked.vcf.gz, dt1.vcf.gz, and dt2.vcf.gz (or if not normalized val2.ped and val2.ped)
-# SnpRecode generates three files: [tot.geno, tot.mark] for fimpute, and [tot.alleles] to decode fimpute output
+# SnpRecode generates three files: [tot.geno, tot.mark] for fimpute, and [tot.vcf_a1a2] to decode fimpute output
 ./snprecode -D $tmp1 -O tot
 
 # impute
