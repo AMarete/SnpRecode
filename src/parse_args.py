@@ -19,7 +19,7 @@ def msg():
     -s snps.txt \\
     -n samples.txt \\ 
     -t 1=vcf; 2=ped|map \\ 
-    -a vcf_a1a2.txt \\
+    -a alleles.txt \\
     -o PREFIX
     
     ==> Calculate genotype correlation between two (un)compressed vcf
@@ -53,8 +53,8 @@ def my_parser():
     #                     help="output map file in plink format")
     optional.add_argument("-t", "--type", metavar="\b", action="store", dest="type_", type=int,
                           help="link code: 1 for vcf, 2 for ped|map")
-    optional.add_argument("-a", "--vcf_a1a2", metavar="\b", action="store", dest="allele",
-                          help="column file with vcf_a1a2 formatted as: chrom_pos_ref_alt")
+    optional.add_argument("-a", "--alleles", metavar="\b", action="store", dest="allele",
+                          help="column file with alleles formatted as: chrom_pos_ref_alt")
     optional.add_argument("--file", type=argparse.FileType("r"), nargs='+', metavar=('file1','file2'))
 
     parser._action_groups.append(optional)

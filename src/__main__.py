@@ -16,7 +16,7 @@ print("system requirements met...")
 def main():
     args1 = [('-D', '--DIR'), ('-O', '--OUT')]
     args2 = [('-g', '--geno'), ('-s', '--snps'), ('-o', '--out'),
-             ('-n', '--samples'), ('-t', '--type'), ('-a', '--vcf_a1a2')]
+             ('-n', '--samples'), ('-t', '--type'), ('-a', '--alleles')]
     '''
     py_version()
     pkg_requirements()
