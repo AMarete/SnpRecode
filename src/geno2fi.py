@@ -49,7 +49,7 @@ for index, file in enumerate(file_list):
                     if bta + ":" + pos not in snps_list.keys():
                         snps_list[bta + ":" + pos] = [bta, snp, "0", pos, ref, alt]
                     # elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos] != [ref + '_' + alt]:
-                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4] != ref:
+                    elif bta + ":" + pos in snps_list.keys() and snps_list[bta + ":" + pos][4].lower() != ref.lower():
                         print('Some REF/ALT may be flipped \n'
                               'Normalize VCF files e.g. `bcftools norm -f [REF_GENOME] ... `\n')
                         raise SystemExit
