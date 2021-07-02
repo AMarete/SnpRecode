@@ -30,7 +30,6 @@ except FileNotFoundError:
 
 toto = my_parser().type_
 
-
 if my_parser().out:
     pass
 else:
@@ -70,11 +69,12 @@ count = 0
 with snp_info as file:
     next(file)
     for line in file:
-        snpid, chrom, pos, chips = re.sub('\s+','\t',line).split('\t', 3)
+        snpid, chrom, pos, chips = re.sub('\s+', '\t', line).split('\t', 3)
         snps[snpid.lower()] = [chrom, pos, snpid]
         # snps[chrom + ":" + pos] = [chrom, pos, snpid]
         # snps.append(chrom + ":" + pos)
-        plink_info[count] = [snpid.lower()]
+        # plink_info[count] = [snpid.lower()]
+        plink_info[count] = [chrom + ":" + pos]
         count += 1
 
 # Alleles file
@@ -89,11 +89,11 @@ with allele_info as file:
         if a1 == '.': a1 = '0'
         if a2 == '.': a2 = '0'
         if a1 == '0':  # monomorphic snp (A1=0)
-            plink_ACGT[snp.lower()] = [a1 + ' ' + a1, a1 + ' ' + a1, a2 + ' ' + a2, a1 + ' ' + a1,
+            plink_ACGT[chrom + ":" + pos] = [a1 + ' ' + a1, a1 + ' ' + a1, a2 + ' ' + a2, a1 + ' ' + a1,
                                        a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1,
                                        a1 + ' ' + a1, a1 + ' ' + a1, snp]
         else:
-            plink_ACGT[snp.lower()] = [a1 + ' ' + a1, a1 + ' ' + a2, a2 + ' ' + a2, a1 + ' ' + a2,
+            plink_ACGT[chrom + ":" + pos] = [a1 + ' ' + a1, a1 + ' ' + a2, a2 + ' ' + a2, a1 + ' ' + a2,
                                        a2 + ' ' + a1, '0 0', '0 0', '0 0', '0 0', '0 0', snp]
         count += 1
 
@@ -119,8 +119,11 @@ with geno_info as gfile:
             genotypes.append(row)
         elif toto == 2:
             for n, a in enumerate(geno):
-                geno_tot.append(plink_ACGT[plink_info[n][0]][int(a)])
-            geno_out.write('%s %s \n' % (' '.join([sample_id, sample_id, '0','0','2','-9' ]), ' '.join(geno_tot)))
+                try:
+                    geno_tot.append(plink_ACGT[plink_info[n][0]][int(a)])
+                except KeyError:
+                    pass
+            geno_out.write('%s %s \n' % (' '.join([sample_id, sample_id, '0', '0', '2', '-9']), ' '.join(geno_tot)))
 
 # continue writing VCF
 if toto == 1:
@@ -132,7 +135,7 @@ if toto == 1:
 if toto == 2:
     map_out = open(fo + ".map", "w")
     map_ped = []
-    for snp in snps.keys(): # snps is a list need to ammend this
+    for snp in snps.keys():  # snps is a list need to ammend this
         try:
             ms = vcf_a1a2[snp][0:3]
             ms.insert(0, '0')
