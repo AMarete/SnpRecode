@@ -9,7 +9,7 @@ import subprocess
 def welcome_message():
     print(
         """----------------------------------------
-FImpute helper utility (Version 1.0.3)
+FImpute helper utility (Version 1.0.4)
 Copyright (C) 2018-2021 Andrew Marete
 ----------------------------------------""")
 

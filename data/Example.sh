@@ -57,12 +57,12 @@ wait
 # remove duplicates
 echo "$(awk '!seen[$x]++' dt12.snp.txt)" > dt12.snp.txt
 
-# subset snp common to both val and ref
+# subset marker common to both val and ref
 awk -F '\t' 'NR==FNR {id[$1"_"$2]; next} $1"_"$2 in id' dt12.snp.txt  ref.snp.txt | awk '{print $1"\t"$2}' >  ref.snp.masked.txt
 
 # split the REF dataset:
 # 1. does not have the samples whose genotypes is to be masked ie the new REF
-# 2. contains the randomly selected subset of ref samples and snp available in the validation data
+# 2. contains the randomly selected subset of ref samples and marker available in the validation data
 bcftools index REF.vcf.gz 
 bcftools view -S ^ref.masked.txt -Oz -o ${tmp1}/ref.vcf.gz  REF.vcf.gz &
 bcftools view -S ref.masked.txt  -R ref.snp.masked.txt -Oz -o ${tmp1}/ref.masked.vcf.gz REF.vcf.gz &

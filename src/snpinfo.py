@@ -15,7 +15,7 @@ print("convert one or several bim and/or map files to fimpute format\n"
 # container for all snps
 markers = {}
 
-# get the snp files in order, largest to smallest
+# get the marker files in order, largest to smallest
 in_files = []
 for item in my_parser().file:
     if item.name.endswith(('bim', 'map')):
@@ -63,7 +63,7 @@ mark = sorted(mark, key=lambda x: (int(x[1]), int(x[2])))
 
 f_out = "snpinfo.txt"
 mark_out = open(f_out, "w")
-mark_out.write('snp bta pos chips...\n')
+mark_out.write('marker bta pos chips...\n')
 for row in mark:
     mark_out.write(' '.join(str(e) for e in row) + '\n')
 

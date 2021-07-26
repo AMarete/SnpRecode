@@ -40,11 +40,11 @@ def my_parser():
     optional.add_argument("-O", "--OUT", metavar="\b", action="store", dest="OUT",
                           help="PREFIX for fimpute input files")
     # optional.add_argument("-M", "--MARK", metavar="\b", action="store", dest="MARK",
-    #                     help="fimpute snp input file")
+    #                     help="fimpute marker input file")
     optional.add_argument("-g", "--geno", metavar="\b", action="store", dest="geno",
                           help="imputed genotype from fimpute")
     optional.add_argument("-s", "--snps", metavar="\b", action="store", dest="snps",
-                          help="snp info file from fimpute")
+                          help="marker info file from fimpute")
     optional.add_argument("-n", "--samples", metavar="\b", action="store", dest="samples",
                           help="column file specifying the study samples")
     optional.add_argument("-o", "--out", metavar="\b", action="store", dest="out",

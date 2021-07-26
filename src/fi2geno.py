@@ -62,18 +62,18 @@ with samples as file:
     for line in file:
         study_samples.append(line.strip())
 
-# Fimpute snp info
+# Fimpute marker info
 snps = {}
 plink_info = {}
 count = 0
 with snp_info as file:
     next(file)
     for line in file:
-        snpid, chrom, pos, chips = re.sub('\s+', '\t', line).split('\t', 3)
-        snps[snpid.lower()] = [chrom, pos, snpid]
-        # snps[chrom + ":" + pos] = [chrom, pos, snpid]
+        marker, chrom, pos, chips = re.sub('\s+', '\t', line).split('\t', 3)
+        snps[marker.lower()] = [chrom, pos, marker]
+        # snps[chrom + ":" + pos] = [chrom, pos, marker]
         # snps.append(chrom + ":" + pos)
-        # plink_info[count] = [snpid.lower()]
+        # plink_info[count] = [marker.lower()]
         plink_info[count] = [chrom + ":" + pos]
         count += 1
 
@@ -83,24 +83,24 @@ plink_ACGT = {}
 count = 0
 with allele_info as file:
     for line in file:
-        chrom, snp, cm, pos, a1, a2 = line.strip().split()
-        vcf_a1a2[snp.lower()] = [chrom, pos, snp, a1, a2, ".", "PASS", ".", "GT"]
-        # vcf_a1a2[chrom + ":" + pos] = [chrom, pos, snp, a1, a2, ".", "PASS", ".", "GT"]
+        chrom, marker, cm, pos, a1, a2 = line.strip().split()
+        vcf_a1a2[marker.lower()] = [chrom, pos, marker, a1, a2, ".", "PASS", ".", "GT"]
+        # vcf_a1a2[chrom + ":" + pos] = [chrom, pos, marker, a1, a2, ".", "PASS", ".", "GT"]
         if a1 == '.': a1 = '0'
         if a2 == '.': a2 = '0'
-        if a1 == '0':  # monomorphic snp (A1=0)
+        if a1 == '0':  # monomorphic marker (A1=0)
             plink_ACGT[chrom + ":" + pos] = [a1 + ' ' + a1, a1 + ' ' + a1, a2 + ' ' + a2, a1 + ' ' + a1,
-                                       a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1,
-                                       a1 + ' ' + a1, a1 + ' ' + a1, snp]
+                                             a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1, a1 + ' ' + a1,
+                                             a1 + ' ' + a1, a1 + ' ' + a1, marker]
         else:
             plink_ACGT[chrom + ":" + pos] = [a1 + ' ' + a1, a1 + ' ' + a2, a2 + ' ' + a2, a1 + ' ' + a2,
-                                       a2 + ' ' + a1, '0 0', '0 0', '0 0', '0 0', '0 0', snp]
+                                             a2 + ' ' + a1, '0 0', '0 0', '0 0', '0 0', '0 0', marker]
         count += 1
 
 # For VCF only
 # Add header for first 9 lines and write vcf
 vcfsnps = {k: vcf_a1a2[k] for k in vcf_a1a2.keys() & set(snps.keys())}.values()
-vcfsnps = sorted(vcfsnps, key=lambda x: (int(x[0]), int(x[1])))
+vcfsnps = sorted(vcfsnps, key=lambda x: (x[0], int(x[1])))
 vcfsnps.insert(0, ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
 genotypes = []
 
@@ -135,14 +135,14 @@ if toto == 1:
 if toto == 2:
     map_out = open(fo + ".map", "w")
     map_ped = []
-    for snp in snps.keys():  # snps is a list need to ammend this
+    for marker in snps.keys():  # snps is a list need to ammend this
         try:
-            ms = vcf_a1a2[snp][0:3]
+            ms = vcf_a1a2[marker][0:3]
             ms.insert(0, '0')
             ms = [ms[i] for i in [1, 3, 0, 2]]
             map_ped.append(ms)
         except KeyError:
-            ms = snps[snp]
+            ms = snps[marker]
             ms.insert(0, '0')
             ms = [ms[i] for i in [1, 3, 0, 2]]
             map_ped.append(ms)

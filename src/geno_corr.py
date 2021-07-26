@@ -36,7 +36,7 @@ file_plot = "genotype_R2.pdf"
 
 # open file for saving
 outfile = open(file_txt, 'w')
-outfile.write('snp\tmaf\tR2\n')
+outfile.write('marker\tmaf\tR2\n')
 
 result = defaultdict(list)
 samples = []

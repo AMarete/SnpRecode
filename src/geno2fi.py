@@ -21,7 +21,7 @@ allele_out = open(fe, 'w')
 
 # header for FImpute genotype and snps files
 geno_out.write('sample_id Chip Call...\n')
-mark_out.write('snp bta pos chips...\n')
+mark_out.write('marker bta pos chips...\n')
 
 # Initialize empty dictionary for the various markers
 mark_tot = {}
@@ -71,7 +71,7 @@ for index, file in enumerate(file_list):
         file_ped = file_list[index].split(' ')[1]
         # Parse and write PED files one at a time
         chip = index + 1  # Chip information
-        snp_number = 0  # initiate snp number
+        snp_number = 0  # initiate marker number
 
         with open_by_suffix(file_ped) as f:
             for line in f:
@@ -124,7 +124,7 @@ mark = sorted(mark, key=lambda x: (int(x[1]), int(x[2])))
 for row in mark:
     mark_out.write(' '.join(str(e) for e in row) + '\n')
 
-# Write a snp list with ref/alt information
+# Write a marker list with ref/alt information
 for row in [list(flatten(i)) for i in list(snps_list.values())]:
     allele_out.write('\t'.join(row) + '\n')
 
