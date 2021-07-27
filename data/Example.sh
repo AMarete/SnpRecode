@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-# andrew.marete@canada.ca, 2018
+# gitahimart@gmail.com, 2018
 
 # Check pre-requisites
 if  ! command -v snprecode &> /dev/null; then echo "SnpRecode not found"; exit;  fi
