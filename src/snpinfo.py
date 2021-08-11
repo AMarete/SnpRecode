@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-
 from funtools import flatten
 from parse_args import my_parser
 import timeit
@@ -16,14 +12,13 @@ print("convert one or several bim and/or map files to fimpute format\n"
 markers = {}
 
 # get the marker files in order, largest to smallest
-in_files = []
-for item in my_parser().file:
-    if item.name.endswith(('bim', 'map')):
-        in_files.append(item.name)
+in_files = [
+    item.name
+    for item in my_parser().file
+    if item.name.endswith(('bim', 'map'))
+]
 
-file_list = {}
-for file in in_files:
-    file_list[file] = len(open(file).readlines())
+file_list = {file: len(open(file).readlines()) for file in in_files}
 file_list = sorted(file_list, key=file_list.get, reverse=True)
 
 mark_chip = list('0' * len(file_list))
@@ -42,7 +37,7 @@ for chip, file in enumerate(file_list):
             markers[key] = [snpname] + mark_chip
         if key in markers:
             value = list(markers[key])
-            value[chip+1] = snp_number + 1
+            value[chip + 1] = snp_number + 1
             markers[key] = value
 
 # Create a comprehensive snps file
@@ -75,4 +70,3 @@ print(f"\nSuccess! created {f_out}")
 print("Runtime (H:M:S): %d:%d:%d\n" % (hours, mins, secs))
 print("\n")
 raise SystemExit
-

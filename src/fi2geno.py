@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import timeit
 import re
 from datetime import datetime
@@ -30,9 +27,7 @@ except FileNotFoundError:
 
 toto = my_parser().type_
 
-if my_parser().out:
-    pass
-else:
+if not my_parser().out:
     bomb('Missing argument, "-o PREFIX", "--out PREFIX"\n'
          'Error: run `./snprecode -h` for complete arguments list '
          'required to recode from FImpute\n')
@@ -112,9 +107,7 @@ with geno_info as gfile:
         sample_id, chip, geno = line.strip().split()
         if sample_id not in study_samples: continue
         if toto == 1:
-            row = []
-            for n, a in enumerate(geno):
-                row.append(fimpute_2_vcf.get(str(a), "!"))
+            row = [fimpute_2_vcf.get(str(a), "!") for n, a in enumerate(geno)]
             row.insert(0, sample_id)
             genotypes.append(row)
         elif toto == 2:
@@ -135,7 +128,7 @@ if toto == 1:
 if toto == 2:
     map_out = open(fo + ".map", "w")
     map_ped = []
-    for marker in snps.keys():  # snps is a list need to ammend this
+    for marker in snps:  # snps is a list need to ammend this
         try:
             ms = vcf_a1a2[marker][0:3]
             ms.insert(0, '0')
@@ -153,11 +146,7 @@ if toto == 2:
 
 geno_out.close()
 
-if toto == 1:
-    tt = fo + '.vcf.gz'
-else:
-    tt = ' and '.join([fo + ".ped", fo + ".map"])
-
+tt = fo + '.vcf.gz' if toto == 1 else ' and '.join([fo + ".ped", fo + ".map"])
 stop = timeit.default_timer()
 mins, secs = divmod(stop - start, 60)
 hours, mins = divmod(mins, 60)

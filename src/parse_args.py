@@ -58,5 +58,4 @@ def my_parser():
     optional.add_argument("--file", type=argparse.FileType("r"), nargs='+', metavar=('file1','file2'))
 
     parser._action_groups.append(optional)
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
