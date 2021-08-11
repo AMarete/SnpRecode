@@ -69,8 +69,7 @@ def file_by_size(dirname, filetype, reverse=True):
 def flatten(container):
     for i in container:
         if isinstance(i, (list, tuple)):
-            for j in flatten(i):
-                yield j
+            yield from flatten(i)
         else:
             yield i
 
@@ -88,7 +87,7 @@ def line_count(filename):
 def line_count(command0, filename):
     data = subprocess.Popen([command0], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
                             universal_newlines=True)
-    data = list(i.strip() for i in data.stdout)
+    data = [i.strip() for i in data.stdout]
     return list(flatten([filename, data]))
 
 
@@ -125,10 +124,14 @@ def set_counter(sets):
         in set3, F is not found in any of the other sets
     """
     targets = [*sets]
-    result_ = []
-    for set_element in targets:
-        result_.append(len(set_element.difference(set.union(*[x for x in targets if x is not set_element]))))
-    return result_
+    return [
+        len(
+            set_element.difference(
+                set.union(*[x for x in targets if x is not set_element])
+            )
+        )
+        for set_element in targets
+    ]
 
 
 # find duplicated values in some dictionary.values()
@@ -142,24 +145,18 @@ def find_common(data):
     e.g. 2 is only common twice  D = {'A': {1, 9, 3}, 'B': {2, 4, 5}, 'C': {1, 2, 7}}, use this fxn
     """
     flipped = {}
-    out = []
     for i in data:
         for value in data[i]:
             if value not in flipped:
                 flipped[value] = [i]
             else:
                 flipped[value].append(i)
-    for i in flipped:
-        if len(flipped[i]) > 1:
-            out.append(i)
-    return out
+    return [i for i, value_ in flipped.items() if len(value_) > 1]
 
 
 # Correlations
 def mean_(list0):
-    total = 0
-    for a in list0:
-        total += float(a)
+    total = sum(float(a) for a in list0)
     return total / len(list0)
 
 
@@ -195,15 +192,11 @@ def std_capture(command):
     try:
         data = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
                                 universal_newlines=True)
-        dat = []
-        for line in data.stdout:
-            dat.append(line.strip().split('\t'))
+        dat = [line.strip().split('\t') for line in data.stdout]
         return dat
 
     except FileNotFoundError:
         data = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
                                 universal_newlines=True)
-        dat = []
-        for line in data.stdout:
-            dat.append(line.strip().split('\t'))
+        dat = [line.strip().split('\t') for line in data.stdout]
         return dat

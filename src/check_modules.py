@@ -8,7 +8,7 @@ import sys
 
 
 def py_version():
-    if not float(python_version()[0:3]) >= 3.6:
+    if float(python_version()[0:3]) < 3.6:
         float(python_version()[0:3]) >= 3.6
         return bomb("Python version not satisfied, install Python V3.6 or later\n")
 

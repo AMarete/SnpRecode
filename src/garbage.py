@@ -112,10 +112,11 @@ between_file_chroms = {}  # key=file, v = set(file_chroms)
 def check_dups():
     err = open('Error.txt', 'w')
     # SNPs occurring more than once in same file
-    dict0 = {}
-    for k, v in within_file_snps_dups.items():
-        if len(v) > len(set(v)):
-            dict0[k] = set([x for x in v if v.count(x) > 1])  # multimode(v)  from statistics module
+    dict0 = {
+        k: {x for x in v if v.count(x) > 1}
+        for k, v in within_file_snps_dups.items()
+        if len(v) > len(set(v))
+    }
 
     if dict0:
         err.write(''.join('SNPs occurring more than once in same file'))
