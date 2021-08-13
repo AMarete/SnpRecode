@@ -1,4 +1,4 @@
-author: gitahimart@gmail.com, (C), 2020
+author: gitahimart@gmail.com, (C), 2017
 
 <b>SnpRecode:</b> is a helper utility to convert between various genotype formats specifically for fimpute software. Fimpute is a large scale genotype imputation software designed for use where hundreds of thousands of individuals are genotyped with different chips. Fimpute accepts and generates genotypes in specific format. Format conversion software does not come standard with the distribution of fimpute executable. SnpRecode software aims to bridge this gap by:<br/> 
 
