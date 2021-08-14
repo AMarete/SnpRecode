@@ -62,7 +62,7 @@ the program will stop if:<br/>
 If such errors are found, a file with errors will be generated: ```Error.txt```. If no errors are found, SnpRecode generates 3 files: <br/>
 ```{prefix}.geno, {prefix}.mark ```as inputs for fimpute and ```alleles.txt ``` to decode fimpute output.<br/>
 
-run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
+run fimpute per [fimpute guidelines](https://animalbiosciences.uoguelph.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 
 <b>Recode back to vcf</b>:```./snprecode -g geno_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  alleles.txt -o {prefix2}```. <br/>If the ```-t 2``` switch is used, a plink ped/map file will be generated. A final file with study samples will be produced for downstream analysis e.g ```{prefix2}.vcf.gz```. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions.<br/>
 
