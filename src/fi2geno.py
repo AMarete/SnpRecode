@@ -40,7 +40,7 @@ if toto == 1:
     geno_out.write("".join(
         '''##fileformat=VCFv4.2
 ##filedate=%s
-##source="snprecode v1.0.3"
+##source="snprecode v1.0.4"
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ''' % (datetime.today().strftime('%Y%m%d'))
     ))
