@@ -1,4 +1,4 @@
-author: gitahimart@gmail.com, (C), 2020
+author: gitahimart@gmail.com, (C), 2017
 
 <b>SnpRecode:</b> is a helper utility to convert between various genotype formats specifically for fimpute software. Fimpute is a large scale genotype imputation software designed for use where hundreds of thousands of individuals are genotyped with different chips. Fimpute accepts and generates genotypes in specific format. Format conversion software does not come standard with the distribution of fimpute executable. SnpRecode software aims to bridge this gap by:<br/> 
 
@@ -62,7 +62,7 @@ the program will stop if:<br/>
 If such errors are found, a file with errors will be generated: ```Error.txt```. If no errors are found, SnpRecode generates 3 files: <br/>
 ```{prefix}.geno, {prefix}.mark ```as inputs for fimpute and ```alleles.txt ``` to decode fimpute output.<br/>
 
-run fimpute per [fimpute guidelines](http://animalbiosciences.uoguelp.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
+run fimpute per [fimpute guidelines](https://animalbiosciences.uoguelph.ca/~msargol/fimpute/FImpute_documentation.pdf)<br/>
 
 <b>Recode back to vcf</b>:```./snprecode -g geno_impute.txt -s snp_info.txt -n {samples.txt} -t 1 -a  alleles.txt -o {prefix2}```. <br/>If the ```-t 2``` switch is used, a plink ped/map file will be generated. A final file with study samples will be produced for downstream analysis e.g ```{prefix2}.vcf.gz```. If fimpute was successful in phasing, the alleles will be phased with ```|``` separator, otherwise they’ll have a ```/``` separator as per vcf conventions.<br/>
 
