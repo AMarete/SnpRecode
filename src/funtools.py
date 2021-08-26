@@ -3,6 +3,7 @@
 import gzip
 import os
 import subprocess
+from termcolor import colored
 
 
 # Welcome Message
@@ -16,7 +17,7 @@ Copyright (C) 2018-2021 Andrew Marete
 
 # function to display Error messages
 def bomb(message):
-    print(f"Error: {message}")
+    print(f"{colored('Error', 'red')}: {message}")
     raise SystemExit
 
 
