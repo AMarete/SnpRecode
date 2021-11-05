@@ -39,7 +39,7 @@ with open(fe, 'w') as allele_out:
                     bta, pos, snp, ref, alt, qual, filter_, info, format_, genotype = line.strip().split("\t", 9)
                     bta = bta.replace('Chr', '')
                     geno.append(list(flatten([vcf_2_fimpute.get(i, i)
-                                              for i in [ii.split(':')[0] for ii in genotype.split('\t')]])))
+                                              for i in [ii.split(':')[0].replace("|", "/") for ii in genotype.split('\t')]])))
 
                     if bta != '#CHROM ' and pos != 'POS':
                         if bta + ":" + pos not in snps_list:
@@ -57,7 +57,7 @@ with open(fe, 'w') as allele_out:
 
                         else:
                             value = list(mark_tot[bta + ":" + pos])
-                            value[index+3] = snp_number
+                            value[index + 3] = snp_number
                             mark_tot[bta + ":" + pos] = value
 
             for ii in [list(a) for a in zip(*geno)]:
@@ -89,7 +89,7 @@ with open(fe, 'w') as allele_out:
 
                     else:
                         value = list(mark_tot[bta + ":" + pos])
-                        value[index+3] = snp_number
+                        value[index + 3] = snp_number
                         mark_tot[bta + ":" + pos] = value
                     try:
                         ref = snp.split('_')[2]
