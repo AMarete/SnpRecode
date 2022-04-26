@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import itertools
+import sys
+
 from check_modules import py_version, pkg_requirements
-from funtools import welcome_message, bomb, MyCols
+from funtools import welcome_message, bomb
 
 welcome_message()
-print(f"{MyCols.OKCYAN}checking system requirements...")
+print('checking system requirements...')
 py_version()
 pkg_requirements()
-print(f"{MyCols.OKGREEN}system requirements met...")
+print('system requirements met...')
 
 
 def main():
