@@ -3,7 +3,18 @@
 import gzip
 import os
 import subprocess
-from termcolor import colored
+
+
+class MyCols:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 # Welcome Message
@@ -17,7 +28,7 @@ Copyright (C) 2018-2021 Andrew Marete
 
 # function to display Error messages
 def bomb(message):
-    print(f"{colored('Error', 'red')}: {message}")
+    print(f"{MyCols.HEADER}Error: {message}")
     raise SystemExit
 
 
