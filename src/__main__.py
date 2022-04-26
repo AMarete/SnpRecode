@@ -4,24 +4,20 @@
 import sys
 import itertools
 from check_modules import py_version, pkg_requirements
-from funtools import welcome_message, bomb
+from funtools import welcome_message, bomb, MyCols
 
 welcome_message()
-print("checking system requirements...")
+print(f"{MyCols.OKCYAN}checking system requirements...")
 py_version()
 pkg_requirements()
-print("system requirements met...")
+print(f"{MyCols.OKGREEN}system requirements met...")
 
 
 def main():
     args1 = [('-D', '--DIR'), ('-O', '--OUT')]
     args2 = [('-g', '--geno'), ('-s', '--snps'), ('-o', '--out'),
              ('-n', '--samples'), ('-t', '--type'), ('-a', '--alleles')]
-    '''
-    py_version()
-    pkg_requirements()
-    welcome_message()
-    '''
+
     if len(sys.argv) == 1:
         from parse_args import msg
         print(msg())

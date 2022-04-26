@@ -19,8 +19,8 @@ class MyCols:
 
 # Welcome Message
 def welcome_message():
-    print(
-        """----------------------------------------
+    print(f"""{MyCols.BOLD}
+----------------------------------------
 FImpute helper utility (Version 1.0.4)
 Copyright (C) 2018-2021 Andrew Marete
 ----------------------------------------""")
@@ -28,7 +28,7 @@ Copyright (C) 2018-2021 Andrew Marete
 
 # function to display Error messages
 def bomb(message):
-    print(f"{MyCols.HEADER}Error: {message}")
+    print(f"{MyCols.FAIL}Error: {message}")
     raise SystemExit
 
 
