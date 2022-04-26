@@ -16,6 +16,14 @@ class MyCols:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+    def disable(self):
+        self.HEADER = ''
+        self.OKBLUE = ''
+        self.OKGREEN = ''
+        self.WARNING = ''
+        self.FAIL = ''
+        self.ENDC = ''
+
 
 # Welcome Message
 def welcome_message():
@@ -28,7 +36,7 @@ Copyright (C) 2018-2021 Andrew Marete
 
 # function to display Error messages
 def bomb(message):
-    print(f"{MyCols.FAIL}Error: {message}")
+    print(f"{MyCols.FAIL}Error: {message}{MyCols.ENDC}")
     raise SystemExit
 
 
