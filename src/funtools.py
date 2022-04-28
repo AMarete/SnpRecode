@@ -36,7 +36,7 @@ Copyright (C) 2018-2021 Andrew Marete
 
 # function to display Error messages
 def bomb(message):
-    print(f"{MyCols.FAIL}Error: {message}{MyCols.ENDC}")
+    print(f"{MyCols.FAIL}Error:\t{message}{MyCols.ENDC}")
     raise SystemExit
 
 
