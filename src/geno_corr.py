@@ -45,6 +45,8 @@ with open(file_txt, 'w') as outfile:
             continue
         snp = line.strip().split('\t')[0] + ":" + line.strip().split('\t')[1]
         geno = line.strip().split('\t')[9:]
+        if any("2" in s for s in geno):
+            bomb(f'multi-allelic sites not supported\n\ttry bcftools norm -m- {file1}')
         af = round(((''.join(geno).count('1')) / (len(''.join(geno).replace('|', '').replace('/', '')))), ndigits=4)
         result[snp] = [[af]] if af <= 0.5 else [[round(1 - af, ndigits=4)]]
         dosage = [int(recode.get(i.split(":")[0])) for i in geno]
@@ -60,6 +62,8 @@ with open(file_txt, 'w') as outfile:
             continue
         snp = line.strip().split('\t')[0] + ":" + line.strip().split('\t')[1]
         geno = line.strip().split('\t')[9:]
+        if any("2" in s for s in geno):
+            bomb(f'multi-allelic sites not supported\n\ttry bcftools norm -m- {file2}')
         dosage = [int(recode.get(i.split(":")[0])) for i in geno]
         try:
             result[snp].append(dosage)
