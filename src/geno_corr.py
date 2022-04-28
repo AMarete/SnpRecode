@@ -17,8 +17,7 @@ in_files = [
 ]
 
 if len(in_files) != 2:
-    bomb('''two vcf files required to calculate genotype correlation\n       
-         try: `./snprecode --file vcf1 vcf2''')
+    bomb('''two vcf files required to calculate genotype correlation\n\ttry: `snprecode --file vcf1 vcf2`''')
 
 '''
 file1 = my_parser().file[0].name
