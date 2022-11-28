@@ -8,8 +8,8 @@ import sys
 
 
 def py_version():
-    if float(python_version()[0:3]) < 3.6:
-        # float(python_version()[0:3]) >= 3.6
+    vers_ = python_version().split('.')
+    if float('.'.join([vers_[0], vers_[1]])) < 3.6:
         return bomb("Python version not satisfied, install Python V3.6 or later\n")
 
 
