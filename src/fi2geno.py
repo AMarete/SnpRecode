@@ -95,7 +95,7 @@ with allele_info as file:
 # For VCF only
 # Add header for first 9 lines and write vcf
 vcfsnps = {k: vcf_a1a2[k] for k in vcf_a1a2.keys() & set(snps.keys())}.values()
-vcfsnps = sorted(vcfsnps, key=lambda x: (x[0], int(x[1])))
+vcfsnps = sorted(vcfsnps, key=lambda x: (int(x[0]), int(x[1])))
 vcfsnps.insert(0, ["#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER", "INFO", "FORMAT"])
 genotypes = []
 
