@@ -26,7 +26,7 @@ def msg():
     ./snprecode --file file1.vcf.gz file2.vcf.gz
     
     ==> Create an fimpute acceptable snp_info file from one or more plink maps (bim and/or map), max=10 files
-    ./snprecode --file [file_1.map, ..., file_n.bim]
+    ./snprecode --file file_1.map, ..., file_n.bim
     '''
 
 
