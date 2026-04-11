@@ -55,7 +55,6 @@ count = 0
 with snp_info as file:
     next(file)
     for line in file:
-        # marker, chrom, pos, chips = re.sub('\s+', '\t', line).split('\t', 3)
         marker, chrom, pos, chips = line.split(maxsplit=3)
         snps[marker.lower()] = [chrom, pos, marker]
         plink_info[count] = [f"{chrom}:{pos}"]
