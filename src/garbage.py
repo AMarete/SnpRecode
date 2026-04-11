@@ -101,13 +101,6 @@ for index, file_ in enumerate(file_list):
             within_file_snps_dups[file_map] = snps
             between_file_chroms[file_map] = set(chroms)
 
-'''
-within_file_snps_dups = {}  # key=file, v = file_snps
-within_file_sample_dups = {}  # key=file, v = duplicated sample
-between_file_sample_dups = {}  # key=file, v = file_samples
-between_file_chroms = {}  # key=file, v = set(file_chroms)
-'''
-
 
 def check_dups():
     err = open('Error.txt', 'w')

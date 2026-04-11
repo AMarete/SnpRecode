@@ -31,7 +31,7 @@ for chip, file in enumerate(file_list):
         except ValueError:
             chrom, snpname, cm, pos = line.strip().split()
 
-        key = chrom + ":" + pos
+        key = f"{chrom}:{pos}"
 
         if key not in markers:
             markers[key] = [snpname] + mark_chip

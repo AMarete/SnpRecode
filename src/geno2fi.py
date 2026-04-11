@@ -9,9 +9,9 @@ start = timeit.default_timer()
 
 # from check_dups import vcf_dups, ped_dups
 # Open output files
-fi = my_parser().OUT + "_geno.txt"
-fo = my_parser().OUT + "_snps.txt"
-fe = my_parser().OUT + "_alleles"
+fi = f"{my_parser().OUT}_geno.txt"
+fo = f"{my_parser().OUT}_snps.txt"
+fe = f"{my_parser().OUT}_alleles"
 
 geno_out = open(fi, "w")
 mark_out = open(fo, "w")
@@ -42,26 +42,26 @@ with open(fe, 'w') as allele_out:
                                               for i in [ii.split(':')[0].replace("|", "/") for ii in genotype.split('\t')]])))
 
                     if bta != '#CHROM ' and pos != 'POS':
-                        if bta + ":" + pos not in snps_list:
-                            snps_list[bta + ":" + pos] = [bta, snp, "0", pos, ref, alt]
-                        elif bta + ":" + pos in snps_list and snps_list[bta + ":" + pos][4].lower() != ref.lower():
+                        if f"{bta}:{pos}" not in snps_list:
+                            snps_list[f"{bta}:{pos}"] = [bta, snp, "0", pos, ref, alt]
+                        elif f"{bta}:{pos}" in snps_list and snps_list[f"{bta}:{pos}"][4].lower() != ref.lower():
                             print('Some REF/ALT may be flipped \n'
                                   'Normalize VCF files e.g. `bcftools norm -f [REF_GENOME] ... `\n')
                             raise SystemExit
 
                         snp_number += 1
-                        if bta + ":" + pos not in mark_tot:
+                        if f"{bta}:{pos}" not in mark_tot:
                             mark_chip = list('0' * len(file_list))
                             mark_chip[index] = snp_number
-                            mark_tot[bta + ":" + pos] = [snp, bta, pos] + mark_chip
+                            mark_tot[f"{bta}:{pos}"] = [snp, bta, pos] + mark_chip
 
                         else:
-                            value = list(mark_tot[bta + ":" + pos])
+                            value = list(mark_tot[f"{bta}:{pos}"])
                             value[index + 3] = snp_number
-                            mark_tot[bta + ":" + pos] = value
+                            mark_tot[f"{bta}:{pos}"] = value
 
             for ii in [list(a) for a in zip(*geno)]:
-                geno_out.write('{} {} {}\n'.format(ii[0], chip, ''.join(ii[1:])))
+                geno_out.write(f'{ii[0]} {chip} {''.join(ii[1:])}\n')
 
         elif str(file_list[index]).endswith(("ped", "map")):
             file_map = file_list[index].split(' ')[0]
@@ -82,23 +82,23 @@ with open(fe, 'w') as allele_out:
                     snp_number += 1
                     bta, snp, cm, pos = line.strip().split()
 
-                    if bta + ":" + pos not in mark_tot:
+                    if f"{bta}:{pos}" not in mark_tot:
                         value = list('0' * len(file_list))
                         value[index] = snp_number
-                        mark_tot[bta + ":" + pos] = [snp, bta, pos] + value
+                        mark_tot[f"{bta}:{pos}"] = [snp, bta, pos] + value
 
                     else:
-                        value = list(mark_tot[bta + ":" + pos])
+                        value = list(mark_tot[f"{bta}:{pos}"])
                         value[index + 3] = snp_number
-                        mark_tot[bta + ":" + pos] = value
+                        mark_tot[f"{bta}:{pos}"] = value
                     try:
                         ref = snp.split('_')[2]
                         alt = snp.split('_')[3]
-                        if bta + ":" + pos not in snps_list.keys():
-                            snps_list[bta + ":" + pos] = [bta, snp, cm, pos, ref, alt]
-                        elif snps_list[bta + ":" + pos] == [alt + '_' + ref]:
+                        if f"{bta}:{pos}" not in snps_list.keys():
+                            snps_list[f"{bta}:{pos}"] = [bta, snp, cm, pos, ref, alt]
+                        elif snps_list[f"{bta}:{pos}"] == [f"{alt}_{ref}"]:
                             print(f'Warning: Allele flipped for SNP {snp} in PLINK file(s)')
-                        elif snps_list[bta + ":" + pos][4] != ref:
+                        elif snps_list[f"{bta}:{pos}"][4] != ref:
                             print(f'Warning: Possible erroneous allele for SNP {snp} in PLINK file(s)'
                                   f'normalize with `bcftools norm`')
                     except IndexError:
@@ -109,7 +109,8 @@ with open(fe, 'w') as allele_out:
             raise SystemExit
 
     # Create a comprehensive snps file
-    mark = [row for row in [list(flatten(i)) for i in list(mark_tot.values())]]
+    # mark = [row for row in [list(flatten(i)) for i in list(mark_tot.values())]]
+    mark = [list(flatten(i)) for i in mark_tot.values()]
     # Sort the snps by chrom then pos and write index
     mark = sorted(mark, key=lambda x: (int(x[1]), int(x[2])))
 
@@ -122,12 +123,15 @@ with open(fe, 'w') as allele_out:
 
     if len(mark) - len(snps_list) > 0:
         dd = len(mark) - len(snps_list)
-        print(f'Warning: {dd} SNPs excluded when writing `{fe}`\n'
-              f'These {dd} SNPs will not be available when converting FImpute haplotypes to VCF format\n'
-              f'If SNPs already indexed as `chrom_pos_ref_alt`, the alleles may be flipped\n'
-              f'Tip: Convert the file to VCF, Normalize, rename SNPs e.g. \n'
-              f"     `bcftools norm -f [REF_GENOME] file.vcf.gz -Ou | bcftools annotate --set-sample_id '%CHROM\_%POS\_%REF\_%ALT\'` \n"
-              f'Otherwise, converting Fimpute genotypes to PLINK format should be OK\n')
+        print(
+    f"Warning: {dd} SNPs excluded when writing `{fe}`\n"
+    f"These {dd} SNPs will not be available when converting FImpute haplotypes to VCF format\n"
+    f"If SNPs already indexed as `chrom_pos_ref_alt`, the alleles may be flipped\n"
+    f"Tip: Convert the file to VCF, normalize, rename SNPs e.g.\n"
+    "     bcftools norm -f [REF_GENOME] file.vcf.gz -Ou | "
+    "bcftools annotate --set-sample-id '%CHROM_%POS_%REF_%ALT'\n"
+    f"Otherwise, converting FImpute genotypes to PLINK format should be OK\n"
+)
     # close files
     geno_out.close()
     mark_out.close()

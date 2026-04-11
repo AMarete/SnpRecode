@@ -211,11 +211,9 @@ def std_capture(command):
     try:
         data = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
                                 universal_newlines=True)
-        dat = [line.strip().split('\t') for line in data.stdout]
-        return dat
+        return [line.strip().split('\t') for line in data.stdout]
 
     except FileNotFoundError:
         data = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
                                 universal_newlines=True)
-        dat = [line.strip().split('\t') for line in data.stdout]
-        return dat
+        return [line.strip().split('\t') for line in data.stdout]
